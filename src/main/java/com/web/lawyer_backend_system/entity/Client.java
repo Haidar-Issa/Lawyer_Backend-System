@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +29,10 @@ public class Client {
     private String email;
 
     @Column(nullable = false)
-    private long national_number;
+    private BigInteger national_number;
 
     @Column(unique = true)
-    private long phone_number;
+    private BigInteger phone_number;
 
     @Column(nullable = false)
     private String address;

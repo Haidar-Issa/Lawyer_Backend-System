@@ -1,6 +1,7 @@
 package com.web.lawer_backend_system.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class Payment {
     private String paymentId;
 
     @Column(nullable = false , name = "amount")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Amount must be greater than zero")
     private BigDecimal amount;
 
     @Column(nullable = false, name = "payment_method")

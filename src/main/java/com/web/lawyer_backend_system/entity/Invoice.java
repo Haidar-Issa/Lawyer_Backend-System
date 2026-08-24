@@ -2,6 +2,7 @@ package com.web.lawer_backend_system.entity;
 
 import com.web.lawer_backend_system.enums.InvoiceStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,9 +28,10 @@ public class Invoice {
     private String invoiceId;
 
     @Column(name = "invoice_number", nullable = false)
-    private long invoiceNumber;
+    private BigInteger invoiceNumber;
 
     @Column(name = "amount",nullable = false)
+    @DecimalMin(value = "0.0", inclusive = false, message = "Amount must be greater than zero")
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)

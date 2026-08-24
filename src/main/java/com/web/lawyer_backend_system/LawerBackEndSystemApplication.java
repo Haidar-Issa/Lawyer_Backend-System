@@ -1,13 +1,13 @@
-package com.web.lawer_backend_system;
+package com.web.lawyer_backend_system;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LawerBackEndSystemApplication {
+public class LawyerBackEndSystemApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(LawerBackEndSystemApplication.class, args);
+        SpringApplication.run(LawyerBackEndSystemApplication.class, args);
     }
 
 }

@@ -4,7 +4,9 @@ import com.web.lawer_backend_system.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,6 +19,8 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Table(name = "users")
 public class User {
     @Id
@@ -63,7 +67,7 @@ public class User {
     @OneToMany(mappedBy = "assignedLawyer", fetch = FetchType.LAZY)
     private List<Task> tasks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "Lawyer", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "lawyerId", fetch = FetchType.LAZY)
     private List<Appointment> appointments = new ArrayList<>();
 
     //    Create & Update Date

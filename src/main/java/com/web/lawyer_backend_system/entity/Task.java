@@ -26,7 +26,7 @@ public class Task {
     @Column(nullable = false, name = "title")
     private String title;
 
-    @Column(columnDefinition = "TEXT DEFAULT: NO DESCRIPTION")
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Enumerated(EnumType.STRING)

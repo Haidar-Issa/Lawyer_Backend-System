@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -33,7 +34,7 @@ public class OpposingParties {
     private String lawyerName;
 
     @Column(name = "lawyer_phone")
-    private String lawyerPhone;
+    private BigInteger lawyerPhone;
 
     @Column(name = "notes")
     private String notes;

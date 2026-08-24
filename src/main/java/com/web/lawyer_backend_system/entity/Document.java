@@ -24,7 +24,7 @@ public class Document {
     @Column(nullable = false, name = "title")
     private String title;
 
-    @Column(name = "description", nullable = false , columnDefinition = "TEXT DEFAULT: NO DESCRIPTION")
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "file_name" , nullable = false)
