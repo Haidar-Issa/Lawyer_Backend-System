@@ -1,4 +1,4 @@
-package com.web.lawer_backend_system.entity;
+package com.web.lawyer_backend_system.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
@@ -36,8 +36,11 @@ public class Payment {
     private String note;
 
     @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
     @UpdateTimestamp
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

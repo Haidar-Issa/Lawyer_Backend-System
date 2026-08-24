@@ -1,7 +1,7 @@
-package com.web.lawer_backend_system.entity;
+package com.web.lawyer_backend_system.entity;
 
-import com.web.lawer_backend_system.enums.Priority;
-import com.web.lawer_backend_system.enums.TaskStatus;
+import com.web.lawyer_backend_system.enums.Priority;
+import com.web.lawyer_backend_system.enums.TaskStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,9 +55,11 @@ public class Task {
 
 
     @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @PrePersist

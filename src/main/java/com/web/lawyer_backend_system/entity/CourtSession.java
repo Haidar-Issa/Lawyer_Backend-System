@@ -1,6 +1,6 @@
-package com.web.lawer_backend_system.entity;
+package com.web.lawyer_backend_system.entity;
 
-import com.web.lawer_backend_system.enums.CourtSessionStatus;
+import com.web.lawyer_backend_system.enums.CourtSessionStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

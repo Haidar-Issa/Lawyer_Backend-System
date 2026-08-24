@@ -1,4 +1,4 @@
-package com.web.lawer_backend_system.security;
+package com.web.lawyer_backend_system.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,16 +36,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
-                                                    CorsConfigurationSource corsConfigurationSource,
-                                                    AuthenticationProvider authenticationProvider) throws Exception {
+                                                   CorsConfigurationSource corsConfigurationSource,
+                                                   AuthenticationProvider authenticationProvider) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(END_POINTS).permitAll()
-                        .anyRequest().authenticated());
+                        .anyRequest().permitAll());
 
         return http.build();
     }

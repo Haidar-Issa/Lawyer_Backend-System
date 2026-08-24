@@ -1,4 +1,4 @@
-package com.web.lawer_backend_system.entity;
+package com.web.lawyer_backend_system.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -44,9 +44,12 @@ public class OpposingParties {
     private Case caseId;
 
     @CreationTimestamp
-    private LocalDateTime created_at;
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
     @UpdateTimestamp
-    private LocalDateTime updated_at;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;;
 
     @PrePersist
     public void prePersist() {

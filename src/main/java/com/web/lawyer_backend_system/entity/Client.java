@@ -1,11 +1,17 @@
-package com.web.lawer_backend_system.entity;
+package com.web.lawyer_backend_system.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.UpdateTimestamp;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
@@ -18,21 +24,28 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@SQLDelete(sql = "UPDATE clients SET is_deleted = true WHERE client_id = ?")
+@SQLRestriction("is_deleted = false")
 public class Client {
     @Id
-    private String client_id;
+    @Column(name = "client_id")
+    private String clientId;
+
+    @Column(nullable = false,name = "full_name")
+    private String fullName;
 
     @Column(nullable = false)
-    private String full_name;
-
-    @Column(nullable = false)
+    @Email(message = "Email should be valid")
+    @NotBlank(message = "Email is mandatory")
     private String email;
 
-    @Column(nullable = false)
-    private BigInteger national_number;
+    @Column(nullable = false, name = "national_number", unique = true)
+    private BigInteger nationalNumber;
 
-    @Column(unique = true)
-    private BigInteger phone_number;
+    @Column(unique = true, name = "phone_number", nullable = false)
+    private BigInteger phoneNumber;
 
     @Column(nullable = false)
     private String address;
@@ -43,23 +56,34 @@ public class Client {
     )
     private User lawyer;
 
+    @Column(nullable = false , name = "is_deleted")
+    private boolean deleted = false;
+
 //    Relation
     @OneToMany(mappedBy = "client" , fetch = FetchType.LAZY)
+    @Builder.Default
     private List<Case>  cases = new ArrayList<>();
 
     @OneToMany(mappedBy = "clientId", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<Appointment> appointments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Invoice> invoices = new ArrayList<>();
+
     @CreationTimestamp
-    private LocalDateTime created_at;
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    private LocalDateTime updated_at;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @PrePersist
     public void prePersist() {
-        if (this.client_id == null) {
-            this.client_id = UUID.randomUUID().toString();
+        if (this.clientId == null) {
+            this.clientId = UUID.randomUUID().toString();
         }
     }
 

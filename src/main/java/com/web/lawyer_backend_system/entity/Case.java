@@ -1,6 +1,6 @@
-package com.web.lawer_backend_system.entity;
+package com.web.lawyer_backend_system.entity;
 
-import com.web.lawer_backend_system.enums.CaseStatus;
+import com.web.lawyer_backend_system.enums.CaseStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,25 +53,30 @@ public class Case {
     private Client client;
 
     @OneToMany(mappedBy = "legalCase")
+    @Builder.Default
     private List<CaseNote> caseNotes = new ArrayList<>();
 
     @OneToMany(mappedBy = "caseId", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<Document> documents = new ArrayList<>();
 
     @OneToMany(mappedBy = "caseId", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<Task> tasks = new ArrayList<>();
 
     @OneToMany(mappedBy = "caseId", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<Appointment> appointments = new ArrayList<>();
 
     @OneToMany(mappedBy = "caseId", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<OpposingParties> opposingParties = new ArrayList<>();
 
 //    Time
     @Column(nullable = false , name = "start_date")
     private LocalDateTime startDate;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 

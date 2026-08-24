@@ -1,4 +1,4 @@
-package com.web.lawer_backend_system;
+package com.web.lawyer_backend_system;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

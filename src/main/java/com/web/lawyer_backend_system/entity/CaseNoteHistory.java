@@ -1,4 +1,4 @@
-package com.web.lawer_backend_system.entity;
+package com.web.lawyer_backend_system.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

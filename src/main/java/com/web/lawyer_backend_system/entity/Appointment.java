@@ -1,7 +1,7 @@
-package com.web.lawer_backend_system.entity;
+package com.web.lawyer_backend_system.entity;
 
-import com.web.lawer_backend_system.enums.AppointmentStatus;
-import com.web.lawer_backend_system.enums.AppointmentType;
+import com.web.lawyer_backend_system.enums.AppointmentStatus;
+import com.web.lawyer_backend_system.enums.AppointmentType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,10 +59,12 @@ public class Appointment {
     private User lawyerId;
 
     @CreationTimestamp
-    private LocalDateTime created_at;
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    private LocalDateTime updated_at;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @PrePersist
     public void prePersist() {

@@ -1,6 +1,7 @@
-package com.web.lawer_backend_system.enums;
+package com.web.lawyer_backend_system.enums;
 
 public enum UserRole {
     ADMIN,
-    USER
+    USER,
+    TRAINER
 }
