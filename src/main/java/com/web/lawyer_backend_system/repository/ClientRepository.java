@@ -5,6 +5,7 @@ import com.web.lawyer_backend_system.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ClientRepository extends JpaRepository<Client,String> {
+public interface ClientRepository extends JpaRepository<Client,String>, JpaSpecificationExecutor<Client> {
     Optional<Client> findByClientId(String clientId);
     Optional<Client> findByEmail(String email);
     Optional<Client> findByNationalNumber(BigInteger nationalNumber);

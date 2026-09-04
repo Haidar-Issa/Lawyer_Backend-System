@@ -1,5 +1,6 @@
 package com.web.lawyer_backend_system.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.web.lawyer_backend_system.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
@@ -45,6 +46,7 @@ public class User {
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$",
             message = "Password must contain at least one digit, one lowercase letter, one uppercase letter, one special character, and be at least 8 characters long."
     )
+    @JsonIgnore
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -71,12 +73,11 @@ public class User {
     private List<Client> clients = new ArrayList<>();
 
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
-    private List<Case> cases = new ArrayList<>();
+    private List<Case_> aCases = new ArrayList();
 
 
     @OneToMany(mappedBy = "assignedLawyer", fetch = FetchType.LAZY)
-    private List<Case> casesForAssignedLawyer = new ArrayList<>();
-
+    private List<Case_> casesForAssignedLawyer = new ArrayList<>();
 
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
     private List<CaseNote> caseNotes = new ArrayList<>();

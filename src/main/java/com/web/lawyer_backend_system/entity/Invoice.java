@@ -1,8 +1,10 @@
 package com.web.lawyer_backend_system.entity;
 
+
 import com.web.lawyer_backend_system.enums.InvoiceStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -14,7 +16,6 @@ import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,7 +37,8 @@ public class Invoice {
     private String invoiceId;
 
     @Column(name = "invoice_number", nullable = false)
-    private BigInteger invoiceNumber;
+    @NotBlank(message = "Invoice number is Required")
+    private String invoiceNumber;
 
     @Column(name = "amount",nullable = false)
     @DecimalMin(value = "0.0", inclusive = false, message = "Amount must be greater than zero")
@@ -46,6 +48,11 @@ public class Invoice {
     @DecimalMin(value = "0.0")
     @Builder.Default
     private BigDecimal paidAmount =  BigDecimal.ZERO;
+
+    @Column(name = "remaining_amount")
+    @DecimalMin(value = "0.0")
+    @Builder.Default
+    private BigDecimal remainingAmount =  BigDecimal.ZERO;
 
     @Column(name = "currency")
     @Builder.Default
@@ -63,21 +70,28 @@ public class Invoice {
     private LocalDate dueDate;
 
     @Column(name = "paid_date")
-    private LocalDate paidDate;
+    @Builder.Default
+    private LocalDate paidDate = null;
 
     @Column(name = "notes" ,columnDefinition = "TEXT")
     private String notes;
 
     @Column(name = "is_delete")
-    private Boolean isDelete;
+    @Builder.Default
+    private Boolean isDelete = false;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice")
     @Builder.Default
+
     private List <Payment> payments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
     private Client client;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "case_id")
+    private Case_ caseId;
 
     @CreationTimestamp
     @Column(name = "created_at" ,updatable = false)
@@ -88,9 +102,16 @@ public class Invoice {
     private LocalDateTime updatedAt;
 
     @PrePersist
+    @PreUpdate
     public void prePersist() {
         if(this.invoiceId == null) {
             this.invoiceId = UUID.randomUUID().toString();
+        }
+        if(invoiceNumber == null) {
+            this.invoiceNumber = "INV-"+System.currentTimeMillis();
+        }
+        if (this.amount != null && this.paidAmount != null) {
+            this.remainingAmount = this.amount.subtract(this.paidAmount);
         }
     }
 

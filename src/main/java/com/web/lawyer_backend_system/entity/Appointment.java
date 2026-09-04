@@ -3,9 +3,7 @@ package com.web.lawyer_backend_system.entity;
 import com.web.lawyer_backend_system.enums.AppointmentStatus;
 import com.web.lawyer_backend_system.enums.AppointmentType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,6 +15,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter
+@Setter
 public class Appointment {
     @Id
     @Column(name = "appointment_id")
@@ -29,10 +29,10 @@ public class Appointment {
     private String description;
 
     @Column(name = "start_date")
-    private LocalDateTime start_date;
+    private LocalDateTime startDate;
 
     @Column(name = "end_date")
-    private LocalDateTime end_date;
+    private LocalDateTime endDate;
 
     @Column(name = "location")
     private String location;
@@ -44,11 +44,11 @@ public class Appointment {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
-    private AppointmentType Type;
+    private AppointmentType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "case_id")
-    private Case caseId;
+    private Case_ caseId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "client_id")

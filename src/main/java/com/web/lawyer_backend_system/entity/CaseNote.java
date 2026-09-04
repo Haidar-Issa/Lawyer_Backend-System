@@ -1,6 +1,10 @@
 package com.web.lawyer_backend_system.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,6 +15,10 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "case_notes")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class CaseNote {
 
     @Id
@@ -22,7 +30,7 @@ public class CaseNote {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "case_id")
-    private Case legalCase;
+    private Case_ legalCase;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")

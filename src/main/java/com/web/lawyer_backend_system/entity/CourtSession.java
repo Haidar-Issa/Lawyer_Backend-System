@@ -15,10 +15,11 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "court_sessions")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 public class CourtSession {
 
     @Id
@@ -46,6 +47,10 @@ public class CourtSession {
     @Column(nullable = false)
     @Builder.Default
     private CourtSessionStatus status = CourtSessionStatus.SCHEDULED;
+
+    @ManyToOne(fetch = FetchType.LAZY )
+    @JoinColumn(name = "case_id")
+    private Case_ legalCase;
 
     @ElementCollection
     @CollectionTable(

@@ -3,10 +3,10 @@ package com.web.lawyer_backend_system.entity;
 import com.web.lawyer_backend_system.enums.Priority;
 import com.web.lawyer_backend_system.enums.TaskStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
@@ -18,6 +18,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
+@SQLDelete(sql = "UPDATE tasks SET is_deleted = true WHERE task_id = ?")
+@SQLRestriction("is_deleted = false")
 public class Task {
     @Id
     @Column(name = "task_id")
@@ -51,8 +55,10 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "case_id")
-    private Case caseId;
+    private Case_ caseId;
 
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

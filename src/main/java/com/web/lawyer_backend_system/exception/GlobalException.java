@@ -1,9 +1,11 @@
 package com.web.lawyer_backend_system.exception;
 
+import com.web.lawyer_backend_system.dto.ApiResponse;
 import com.web.lawyer_backend_system.dto.ErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
+import org.springframework.messaging.handler.annotation.support.MethodArgumentTypeMismatchException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -57,15 +59,30 @@ public class GlobalException {
         );
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
-    // Handle 404 Endpoint Not Found
+
+    // Handle 404 Endpoints Not Found
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorResponse> handleNoResourceFound(NoResourceFoundException ex) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
-                "The requested endpoint does not exist.",
+                "The requested endpoint does not exist," + ex.getMessage(),
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiResponse<Void>> handleTypeMismatch(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
+        String errorMessage = String.format("The parameter '%s' has an invalid value '%s'", ex.getMessage());
+
+        return ResponseEntity.badRequest().body(
+                ApiResponse.create(
+                        HttpStatus.BAD_REQUEST,
+                        errorMessage,
+                        null,
+                        request.getRequestURI()
+                )
+        );
     }
 
 

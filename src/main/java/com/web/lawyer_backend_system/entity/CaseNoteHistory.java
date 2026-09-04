@@ -1,19 +1,21 @@
 package com.web.lawyer_backend_system.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "case_note_history")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter
+@Setter
 public class CaseNoteHistory {
+
     @Id
     @Column(name = "history_id")
     private String historyId;
@@ -33,7 +35,13 @@ public class CaseNoteHistory {
     private User changedBy;
 
     @CreationTimestamp
-    @Column(name = "changed_at", nullable = false)
+    @Column(name = "changed_at", nullable = false, updatable = false)
     private LocalDateTime changedAt;
 
+    @PrePersist
+    public void prePersist() {
+        if (this.historyId == null) {
+            this.historyId = UUID.randomUUID().toString();
+        }
+    }
 }

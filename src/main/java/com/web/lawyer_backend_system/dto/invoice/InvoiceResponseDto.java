@@ -15,8 +15,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class InvoiceResponseDto {
     private String invoiceId;
-    private Client client;
-    private BigInteger invoiceNumber;
+    private String clientId;
+    private String clientName;
+    private String clientEmail;
+    private String invoiceNumber;
     private BigDecimal amount;
     private BigDecimal paidAmount;
     private String status;

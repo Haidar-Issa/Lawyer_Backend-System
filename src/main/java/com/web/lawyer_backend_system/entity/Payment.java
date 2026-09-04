@@ -2,10 +2,10 @@ package com.web.lawyer_backend_system.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
@@ -17,6 +17,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "payments")
+@Getter
+@Setter
+@SQLDelete(sql = "UPDATE payments SET is_delete = true WHERE payment_id = ?")
+@SQLRestriction("is_delete = false")
 public class Payment {
     @Id
     @Column(name = "payment_id")
@@ -34,6 +38,10 @@ public class Payment {
 
     @Column(name= "note")
     private String note;
+
+    @Column(name = "is_delete")
+    @Builder.Default
+    private Boolean isDelete = false;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

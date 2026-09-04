@@ -1,10 +1,10 @@
 package com.web.lawyer_backend_system.entity;
 
+
 import com.web.lawyer_backend_system.enums.CaseStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,7 +18,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Case {
+@Getter
+@Setter
+public class Case_ {
     @Id
     @Column(name = "case_id")
     private String caseId;
@@ -38,7 +40,8 @@ public class Case {
     private String courtName;
 
     @Column(nullable = false, name = "case_number")
-    private int caseNumber;
+    @NotBlank(message = "Case Number is required")
+    private String caseNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by_id")
@@ -70,11 +73,20 @@ public class Case {
 
     @OneToMany(mappedBy = "caseId", fetch = FetchType.LAZY)
     @Builder.Default
-    private List<OpposingParties> opposingParties = new ArrayList<>();
+    private List<OpposingParity> opposingParties = new ArrayList<>();
 
-//    Time
-    @Column(nullable = false , name = "start_date")
-    private LocalDateTime startDate;
+    @OneToMany(mappedBy = "caseId", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Invoice> invoices = new ArrayList<>();
+
+    @OneToMany(mappedBy = "legalCase", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<CourtSession> courtSessions = new ArrayList<>();
+
+    //    Time
+    @Column(nullable = false, name = "start_date")
+    @Builder.Default
+    private LocalDateTime startDate = LocalDateTime.now();
 
     @Column(name = "created_at", updatable = false)
     @CreationTimestamp
@@ -85,10 +97,13 @@ public class Case {
     private LocalDateTime updatedAt;
 
     @PrePersist
-    public void prePersist()
-    {
-        if(this.caseId == null){
+    public void prePersist() {
+        if (this.caseId == null) {
             this.caseId = UUID.randomUUID().toString();
+        }
+
+        if (this.caseNumber == null) {
+            this.caseNumber = "CASE-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         }
     }
 

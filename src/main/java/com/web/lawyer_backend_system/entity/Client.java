@@ -57,15 +57,17 @@ public class Client {
     private User lawyer;
 
     @Column(nullable = false , name = "is_deleted")
-    private boolean deleted = false;
+    @Builder.Default
+    private boolean isDelete = false;
 
 //    Relation
     @OneToMany(mappedBy = "client" , fetch = FetchType.LAZY)
     @Builder.Default
-    private List<Case>  cases = new ArrayList<>();
+    private List<Case_> aCases = new ArrayList<>();
 
     @OneToMany(mappedBy = "clientId", fetch = FetchType.LAZY)
     @Builder.Default
+
     private List<Appointment> appointments = new ArrayList<>();
 
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)

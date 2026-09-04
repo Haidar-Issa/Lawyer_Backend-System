@@ -1,13 +1,12 @@
 package com.web.lawyer_backend_system.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -16,10 +15,12 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Table(name = "opposing_parities")
-public class OpposingParties {
+@Getter
+@Setter
+public class OpposingParity {
     @Id
     @Column(name = "opposing_parity_id")
-    private String opposingParityId;
+    private String opposingPartyId;
 
     @Column(name = "full_name")
     private String fullName;
@@ -27,6 +28,8 @@ public class OpposingParties {
     @Column(name = "email")
     private String email;
 
+    @NotBlank(message = "Phone number is required")
+    @Pattern(regexp = "^\\+?[0-9]{7,15}$", message = "Invalid phone number format")
     @Column(name = "phone_number")
     private String phoneNumber;
 
@@ -34,14 +37,16 @@ public class OpposingParties {
     private String lawyerName;
 
     @Column(name = "lawyer_phone")
-    private BigInteger lawyerPhone;
+    @Pattern(regexp = "^\\+?[0-9]{7,15}$", message = "Invalid lawyer phone number format")
+    private String lawyerPhone;
 
     @Column(name = "notes")
     private String notes;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "case_id")
-    private Case caseId;
+    @NotBlank(message = "Case ID is required")
+    private Case_ caseId;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -53,8 +58,8 @@ public class OpposingParties {
 
     @PrePersist
     public void prePersist() {
-        if(this.opposingParityId == null){
-            this.opposingParityId = UUID.randomUUID().toString();
+        if(this.opposingPartyId == null){
+            this.opposingPartyId = UUID.randomUUID().toString();
         }
 
     }
