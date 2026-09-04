@@ -1,104 +1,171 @@
-# ⚖️ Lawyer System - Backend Services
+# Lawyer Backend System
 
-A comprehensive backend system built with **Spring Boot 3** and **Java 21** designed to manage law firm operations, case tracking, document control, and party management.
+Backend system built with Spring Boot for managing legal office operations, including clients, cases, appointments, tasks, court sessions, documents and billing.
 
----
+## Overview
 
-## 🚀 Key Features
+This project provides a REST API for a law firm or legal department to manage:
 
-* **Document Management & Storage**:
-  * AWS S3 integration using **Presigned URLs** for direct, high-performance client-side uploads.
-  * Extensible configuration compatible with **MinIO** or S3-compatible cloud providers.
-* **Case & Party Management**:
-  * Tracking opposing parties, court details, and case files.
-  * Dynamic query filtering via Spring Data JPA.
-* **Security & Authorization**:
-  * Role-based access control (RBAC) via Spring Security and JWT.
-* **API Architecture**:
-  * Standardized response structure (`ApiResponse<T>`).
-  * Full pagination and dynamic sorting support.
+- Clients
+- Legal cases
+- Appointments and court sessions
+- Tasks and case notes
+- Financial flows such as invoices and payments
+- Documents and signed files using cloud object storage
+- Authentication and authorization
+- Event processing via RabbitMQ
+- Session management with Redis
 
----
+## Tech Stack
 
-## 🛠️ Tech Stack
+- Java 17
+- Spring Boot 4.1.0
+- Spring Data JPA
+- PostgreSQL
+- Redis
+- RabbitMQ
+- MinIO / AWS S3-compatible storage
+- JWT
+- Maven
+- Docker / Docker Compose
 
-* **Language**: Java 21
-* **Framework**: Spring Boot 3.x
-* **Database**: PostgreSQL / Spring Data JPA
-* **Cloud Storage**: AWS SDK v2 (S3 & Presigner)
-* **Build Tool**: Maven
-* **Documentation/Testing**: Swagger UI / OpenAPI
+## Project Structure
 
----
-
-## ⚙️ Environment Configuration
-
-Add the following properties to your `application.yml` or set them as environment variables:
-
-```yaml
-aws:
-  s3:
-    region: ${AWS_REGION:us-east-1}
-    bucket-name: ${AWS_S3_BUCKET:lawyer-documents-bucket}
-    endpoint: ${AWS_S3_ENDPOINT:http://localhost:9000} # Useful for local MinIO setup
-    access-key: ${AWS_ACCESS_KEY_ID:minioadmin}
-    secret-key: ${AWS_SECRET_ACCESS_KEY:minioadmin}
+```text
+Lawyer_BackEnd_System/
+├── src/
+│   ├── main/
+│   │   ├── java/com/web/lawyer_backend_system/
+│   │   │   ├── controller/
+│   │   │   ├── service/
+│   │   │   ├── repository/
+│   │   │   ├── entity/
+│   │   │   ├── dto/
+│   │   │   ├── config/
+│   │   │   └── security/
+│   │   └── resources/
+│   │       └── application.properties
+│   └── test/
+├── Dockerfile
+├── compose.yaml
+├── pom.xml
+├── mvnw
+├── .gitignore
+└── README.md
 ```
-📡 API Overview (S3 Document Upload Flow)
-To optimize server bandwidth, file uploads follow a two-step Presigned URL process:
 
-[ Frontend ] --(1) Request Presigned URL--> [ Backend ]
-[ Frontend ] <--(2) Return S3 Upload URL---- [ Backend ]
-[ Frontend ] --(3) Direct PUT Upload------> [ AWS S3 / MinIO ]
-[ Frontend ] --(4) Save Metadata DTO-------> [ Backend DB ]
+## Prerequisites
 
-1. Request Presigned Upload URL
-POST /api/documents/presigned-url
+Before running the project, make sure you have installed:
 
-Request Body:
-`{
-  "fileName": "contract_draft.pdf",
-  "contentType": "application/pdf"
-}`
-Response:
-`{
-  "status": 200,
-  "message": "Presigned URL generated successfully",
-  "data": {
-    "uploadUrl": "[https://bucket.s3.region.amazonaws.com/uuid_contract_draft.pdf?X-Amz-Algorithm=](https://bucket.s3.region.amazonaws.com/uuid_contract_draft.pdf?X-Amz-Algorithm=)...",
-    "fileKey": "uuid_contract_draft.pdf",
-    "fileUrl": "[https://bucket.s3.region.amazonaws.com/uuid_contract_draft.pdf](https://bucket.s3.region.amazonaws.com/uuid_contract_draft.pdf)"
-  }
-}`
-3. Save Document Record
-POST /api/documents
+- Java 17+
+- Maven 3.9+
+- Docker and Docker Compose
+- Git
 
-Request Body:
-`{
-  "title": "Initial Contract Draft",
-  "description": "Signed employment agreement draft",
-  "fileName": "contract_draft.pdf",
-  "fileUrl": "[https://bucket.s3.region.amazonaws.com/uuid_contract_draft.pdf](https://bucket.s3.region.amazonaws.com/uuid_contract_draft.pdf)",
-  "caseId": "case-uuid-here"
-}`
-🏃 Getting Started Locally
-Prerequisites
-JDK 21+
+## Configuration
 
-Maven
+The main configuration is in:
 
-Docker (for local PostgreSQL or MinIO instances)
+- `src/main/resources/application.properties`
 
-Run the Application
-1-Clone the repository:
-`git clone [https://github.com/Haidar-Issa/Lawyer_Backend-System.git](https://github.com/Haidar-Issa/Lawyer_Backend-System.git)
-cd Lawyer_Backend-System`
+Default values used by the project:
 
-2-Build the project:
-`mvn clean install`
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/lawyer
+spring.datasource.username=lawyer
+spring.datasource.password=lawyerpass
+jwt.secret=lawyer-local-secret-change-me
+aws.s3.endpoint=http://localhost:9000
+aws.s3.access-key=minioadmin
+aws.s3.secret-key=minioadmin
+aws.s3.region=us-east-1
+```
 
-3-Start the application:
-`mvn spring-boot:run`
+You can override them with environment variables when running locally or through Docker.
 
-📝 License
-Distributed under the MIT License. See LICENSE for more information.
+## Run with Docker
+
+From the project root:
+
+```bash
+docker compose up --build -d
+```
+
+This starts:
+
+- Spring Boot application on `http://localhost:8080`
+- PostgreSQL on `localhost:5432`
+- Redis on `localhost:6379`
+- RabbitMQ on `localhost:5672`
+- RabbitMQ Management UI on `http://localhost:15672`
+- MinIO on `http://localhost:9000`
+- MinIO Console on `http://localhost:9001`
+
+To stop the containers:
+
+```bash
+docker compose down
+```
+
+To view logs:
+
+```bash
+docker compose logs -f app
+```
+
+## Run Locally (without Docker)
+
+1. Start PostgreSQL, Redis, RabbitMQ, and MinIO manually.
+2. Update the configuration values in `application.properties` or set environment variables.
+3. Run:
+
+```bash
+./mvnw clean install
+./mvnw spring-boot:run
+```
+
+Or build the JAR:
+
+```bash
+./mvnw clean package
+java -jar target/Lawyer_BackEnd_System-0.0.1-SNAPSHOT.jar
+```
+
+## Default Credentials
+
+The application includes a default admin user for development/testing:
+
+- Username: `admin`
+- Password: `admin123`
+
+## API Notes
+
+The project exposes REST endpoints under the application context and uses security + JWT patterns. The backend is designed to support a front-end client or mobile app consuming the services.
+
+## Environment Variables
+
+You can override key settings using environment variables:
+
+```bash
+export SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/lawyer
+export SPRING_DATASOURCE_USERNAME=lawyer
+export SPRING_DATASOURCE_PASSWORD=lawyerpass
+export JWT_SECRET=your-secret-key
+export AWS_S3_ENDPOINT=http://localhost:9000
+export AWS_S3_ACCESS_KEY=minioadmin
+export AWS_S3_SECRET_KEY=minioadmin
+export AWS_S3_BUCKET_NAME=lawyer-documents-bucket
+```
+
+## License
+
+This project is for internal or educational use unless a separate license is provided by the repository owner.
+
+## Author
+
+Developed for a legal system / law firm management platform.
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
